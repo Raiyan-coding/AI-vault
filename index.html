@@ -12,17 +12,14 @@
       --bg-light: rgba(255,255,255,0.05);
       --accent: #00e5ff;
       --text-light: #e0e0e0;
-      --text-dark: #111;
       --shadow: rgba(0,0,0,0.6);
       --radius: 1rem;
       --transition: 0.3s ease;
       --icon-size: 48px;
       --card-size: 140px;
-      --pulse: 1.2;
+      --pulse: 1.05;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-
-    /* BODY & BACKGROUND ANIMATION */
     body {
       color: var(--text-light);
       min-height: 100vh;
@@ -32,15 +29,11 @@
       padding: 2rem;
       background: var(--bg-dark);
       overflow-x: hidden;
-      position: relative;
-      animation: bgShift 15s infinite alternate;
+      animation: hueRotate 30s linear infinite;
+      filter: hue-rotate(0deg);
+      transition: filter var(--transition);
     }
-    @keyframes bgShift {
-      0% { background-color: #0a0a0a; }
-      50% { background-color: #1f1b24; }
-      100% { background-color: #0a0a1a; }
-    }
-
+    @keyframes hueRotate { from { filter: hue-rotate(0deg);} to { filter: hue-rotate(360deg);} }
     h1 {
       font-size: 2.5rem;
       margin-bottom: 1.5rem;
@@ -48,12 +41,7 @@
       text-shadow: 0 0 8px var(--accent);
       animation: glow 2s infinite ease-in-out;
     }
-    @keyframes glow {
-      0%,100% { text-shadow: 0 0 8px var(--accent), 0 0 16px var(--accent); }
-      50% { text-shadow: 0 0 4px var(--accent); }
-    }
-
-    /* CARD STYLES */
+    @keyframes glow { 0%,100% { text-shadow: 0 0 12px var(--accent);} 50% { text-shadow: 0 0 6px var(--accent);} }
     .card {
       position: relative;
       background: var(--bg-light);
@@ -61,15 +49,20 @@
       border-radius: var(--radius);
       border: 2px solid transparent;
       box-shadow: 0 8px 24px var(--shadow);
+      width: var(--card-size);
+      height: var(--card-size);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: var(--card-size);
-      height: var(--card-size);
       cursor: pointer;
       overflow: hidden;
       transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+    .card:hover {
+      transform: scale(var(--pulse));
+      box-shadow: 0 12px 32px var(--shadow), 0 0 8px var(--accent);
+      border-color: var(--accent);
     }
     .card::before {
       content: '';
@@ -80,38 +73,11 @@
       transition: opacity var(--transition);
       z-index: 0;
     }
-    .card:hover::before {
-      opacity: 0.2;
-    }
-    .card:hover {
-      transform: scale(var(--pulse));
-      box-shadow: 0 12px 32px var(--shadow), 0 0 8px var(--accent);
-      border-color: var(--accent);
-    }
-    .card img {
-      width: var(--icon-size);
-      height: var(--icon-size);
-      margin-bottom: 0.5rem;
-      z-index: 1;
-    }
-    .card span {
-      font-size: 0.8rem;
-      text-align: center;
-      z-index: 1;
-    }
-    .card .actions {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      display: flex;
-      gap: 4px;
-      opacity: 0;
-      transition: opacity var(--transition);
-      z-index: 2;
-    }
-    .card:hover .actions {
-      opacity: 1;
-    }
+    .card:hover::before { opacity: 0.2; }
+    .card img { width: var(--icon-size); height: var(--icon-size); margin-bottom: 0.5rem; z-index: 1; }
+    .card span { font-size: 0.8rem; text-align: center; z-index: 1; }
+    .actions { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity var(--transition); z-index: 2; }
+    .card:hover .actions { opacity: 1; }
     .actions button {
       background: var(--bg-dark);
       border: 1px solid var(--accent);
@@ -120,45 +86,21 @@
       border-radius: 4px;
       font-size: 0.7rem;
       cursor: pointer;
-      transition: background var(--transition);
+      transition: background var(--transition), color var(--transition);
     }
-    .actions button:hover {
-      background: var(--accent);
-      color: var(--bg-dark);
-    }
-
-    /* LAYOUT */
-    #add-topic-area, #topics, #back-btn, #tools-area, #add-area { width: 100%; max-width: 1000px; }
-    #add-topic-area { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
-    #add-topic-area input, #add-area input { flex: 1; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #333; background: rgba(255,255,255,0.1); color: var(--text-light); }
-    #add-topic-area button, #add-area button { padding: 0.75rem 1rem; border-radius: 0.5rem; border: none; background: var(--accent); color: var(--bg-dark); font-weight: 500; cursor: pointer; transition: background var(--transition); }
-    #add-topic-area button:hover, #add-area button:hover { background: #4bc0c8; }
-    #topics, #tools-area { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--card-size),1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-    #back-btn { display: none; margin-bottom: 1rem; background: none; border: none; color: var(--accent); font-size: 1rem; cursor: pointer; text-decoration: underline; }
-    #add-area { display: none; margin-bottom: 2rem; }
-
-    /* FORM FOCUS EFFECT */
+    .actions button:hover { background: var(--accent); color: var(--bg-dark); }
+    #add-topic-area, #topics, #back-btn, #tools-area, #add-area { width: 100%; max-width: 1000px; margin-bottom: 1.5rem; }
+    #add-topic-area { display: flex; gap: 0.5rem; }
+    input { flex: 1; padding: 0.75rem; border-radius: 0.5rem; border: 1px solid #333; background: rgba(255,255,255,0.1); color: var(--text-light); font-size: 1rem; transition: box-shadow var(--transition); }
     input:focus { outline: none; box-shadow: 0 0 6px var(--accent); }
-
+    button { padding: 0.75rem 1rem; border-radius: 0.5rem; border: none; background: var(--accent); color: var(--bg-dark); font-weight: 500; cursor: pointer; transition: background var(--transition); }
+    button:hover { background: #4bc0c8; }
+    #topics, #tools-area { display: grid; grid-template-columns: repeat(auto-fit, minmax(var(--card-size), 1fr)); gap: 1.5rem; }
+    #back-btn { display: none; background: none; border: none; color: var(--accent); font-size: 1rem; cursor: pointer; text-decoration: underline; margin-bottom: 1rem; }
+    #add-area { display: none; margin-bottom: 2rem; }
   </style>
 </head>
 <body>
-  <script>
-    // On load, pick random gradient from preset palettes
-    (function() {
-      const palettes = [
-        ['#004e92','#000428'], // blue to dark
-        ['#8e2de2','#4a00e0'], // purple
-        ['#ff416c','#ff4b2b'], // red
-        ['#1f4037','#99f2c8'], // greenish
-        ['#4158D0','#C850C0'], // violet
-        ['#11998e','#38ef7d'], // teal
-      ];
-      const pair = palettes[Math.floor(Math.random()*palettes.length)];
-      document.body.style.background = `radial-gradient(circle at 20% 30%, ${pair[0]}33, transparent 60%), radial-gradient(circle at 80% 80%, ${pair[1]}33, transparent 60%), var(--bg-dark)`;
-    })();
-  </script>
-
   <h1>Vault</h1>
   <div id="add-topic-area">
     <input type="text" id="new-topic" placeholder="New Topic Name" />
@@ -172,69 +114,51 @@
     <input type="url" id="tool-url" placeholder="https://example.com" />
     <button id="add-btn">Add Tool</button>
   </div>
-
   <script>
-    // Backspace reloads page when not in input
     document.addEventListener('keydown', e => {
       if (e.key === 'Backspace') {
-        const tag = e.target.tagName.toLowerCase();
-        const type = e.target.type ? e.target.type.toLowerCase() : '';
-        const isEditable = (tag === 'input' && (type === 'text' || type === 'url')) || tag === 'textarea';
-        if (!isEditable) { e.preventDefault(); window.location.reload(); }
+        const tag = e.target.tagName.toLowerCase(), type = e.target.type ? e.target.type.toLowerCase() : '';
+        if (!((tag==='input'&&(type==='text'||type==='url'))||tag==='textarea')) { e.preventDefault(); window.location.reload(); }
       }
     });
-
     const STORAGE_KEY = 'vaultData';
     let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     if (!data.some(d => d.topic === 'AI vault')) {
-      const defaultTools = [
-        ['chatgpt','https://chat.openai.com'],['Gemini','https://gemini.google.com'],['Copilot','https://github.com/features/copilot'],
+      const defaultTools = [['chatgpt','https://chat.openai.com'],['Gemini','https://gemini.google.com'],['Copilot','https://github.com/features/copilot'],
         ['Perplexity','https://www.perplexity.ai'],['dende.ai','https://www.dende.ai'],['notebook','https://notebook.ai'],
         ['bolt.new','https://bolt.new'],['heygen','https://heygen.com'],['runwayml','https://runwayml.com'],
         ['hailuoai.video','https://hailuoai.video'],['klingai','https://kling.ai'],['lensgo','https://lensgo.ai'],
         ['getcartwheel','https://getcartwheel.com'],['google ai studio','https://studio.google.ai'],['character ai','https://beta.character.ai'],
-        ['jules (programmer)','https://jules.ai']
-      ];
-      defaultTools.forEach(([n,u]) => data.push({ topic:'AI vault', name:n, url:u }));
+        ['jules (programmer)','https://jules.ai']];
+      defaultTools.forEach(([n,u]) => data.push({ topic: 'AI vault', name: n, url: u }));
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     }
-
     const newTopicInput = document.getElementById('new-topic'), addTopicBtn = document.getElementById('add-topic-btn');
     const topicsDiv = document.getElementById('topics'), backBtn = document.getElementById('back-btn');
     const toolsArea = document.getElementById('tools-area'), addArea = document.getElementById('add-area');
-    const nameInput = document.getElementById('tool-name'), urlInput = document.getElementById('tool-url'), addBtn = document.getElementById('add-btn');
+    const nameInput = document.getElementById('tool-name'), urlInput = document.getElementById('tool-url'), addBtnEl = document.getElementById('add-btn');
     let currentTopic = null;
-
     const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     const getTopics = () => [...new Set(data.map(d => d.topic))];
-
     function renderTopics() {
       topicsDiv.innerHTML = '';
       getTopics().forEach(t => {
         const card = document.createElement('div'); card.className = 'card';
-        const span = document.createElement('span'); span.textContent = t;
-        card.append(span);
-
+        const span = document.createElement('span'); span.textContent = t; card.append(span);
         const act = document.createElement('div'); act.className = 'actions';
         const edit = document.createElement('button'); edit.textContent = '✎'; edit.onclick = e => {
-          e.stopPropagation(); const newName = prompt('Rename topic', t);
-          if (newName) { data.filter(d => d.topic === t).forEach(d => d.topic = newName); save(); renderTopics(); }
+          e.stopPropagation(); const nn = prompt('Rename topic', t);
+          if (nn) { data.filter(d => d.topic === t).forEach(d => d.topic = nn); save(); renderTopics(); }
         };
         const del = document.createElement('button'); del.textContent = '✕'; del.onclick = e => {
           e.stopPropagation(); if (confirm(`Delete topic "${t}"?`)) { data = data.filter(d => d.topic !== t); save(); renderTopics(); }
         };
         act.append(edit, del); card.append(act);
-
         card.onclick = () => enterTopic(t);
         topicsDiv.append(card);
       });
     }
-
-    addTopicBtn.onclick = () => {
-      const t = newTopicInput.value.trim();
-      if (t && !getTopics().includes(t)) { data.push({ topic: t }); save(); newTopicInput.value = ''; renderTopics(); }
-    };
-
+    addTopicBtn.onclick = () => { const t = newTopicInput.value.trim(); if (t && !getTopics().includes(t)) { data.push({ topic: t }); save(); newTopicInput.value = ''; renderTopics(); }};
     function enterTopic(t) {
       currentTopic = t;
       document.getElementById('add-topic-area').style.display = 'none';
@@ -244,7 +168,6 @@
       addArea.style.display = 'block';
       renderTools();
     }
-
     backBtn.onclick = () => {
       currentTopic = null;
       backBtn.style.display = 'none';
@@ -253,34 +176,38 @@
       document.getElementById('add-topic-area').style.display = 'flex';
       topicsDiv.style.display = 'grid';
     };
-
     function renderTools() {
       toolsArea.innerHTML = '';
       const tools = data.filter(d => d.topic === currentTopic && d.name);
       tools.forEach(tool => {
         const card = document.createElement('div'); card.className = 'card';
-        const img = document.createElement('img');
-        try { img.src = `https://www.google.com/s2/favicons?domain=${new URL(tool.url).hostname}&sz=64`; } catch {}
+        const img = document.createElement('img'); try { img.src = `https://www.google.com/s2/favicons?domain=${new URL(tool.url).hostname}&sz=64`; } catch {}
         const span = document.createElement('span'); span.textContent = tool.name;
         card.append(img, span);
-
         const act = document.createElement('div'); act.className = 'actions';
         const edit = document.createElement('button'); edit.textContent = '✎'; edit.onclick = e => {
-          e.stopPropagation(); const nn = prompt('Edit name', tool.name);
-          const uu = prompt('Edit URL', tool.url);
+          e.stopPropagation(); const nn = prompt('Edit name', tool.name); const uu = prompt('Edit URL', tool.url);
           if (nn && uu) { tool.name = nn; tool.url = uu; save(); renderTools(); }
         };
         const del = document.createElement('button'); del.textContent = '✕'; del.onclick = e => {
           e.stopPropagation(); if (confirm(`Delete tool "${tool.name}"?`)) { data = data.filter(d => !(d.topic === currentTopic && d.name === tool.name && d.url === tool.url)); save(); renderTools(); }
         };
         act.append(edit, del); card.append(act);
-
         card.onclick = () => window.open(tool.url, '_blank');
         toolsArea.append(card);
       });
       if (!tools.length) toolsArea.innerHTML = '<p>No tools yet, add one below!</p>';
     }
-
+    // Attach add tool handler
+    addBtnEl.onclick = () => {
+      const n = nameInput.value.trim(), u = urlInput.value.trim();
+      if (!n || !u) return alert('Enter both name & URL');
+      data.push({ topic: currentTopic, name: n, url: u });
+      save();
+      nameInput.value = ''; urlInput.value = '';
+      renderTools();
+    };
+    // Initial render
     renderTopics();
     toolsArea.style.display = 'none';
     addArea.style.display = 'none';
